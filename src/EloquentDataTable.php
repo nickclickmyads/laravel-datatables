@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOneOrMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\MorphOneOrMany;
 
 class EloquentDataTable extends QueryDataTable
 {
@@ -158,6 +159,9 @@ class EloquentDataTable extends QueryDataTable
                     $this->performJoin($table, $foreign, $other);
 
                     break;
+
+                case $model instanceof MorphOneOrMany:
+                    $this->getBaseQueryBuilder()->where($model->getQualifiedMorphType(), '=', $model->getMorphClass());
 
                 case $model instanceof HasOneOrMany:
                     $table     = $model->getRelated()->getTable();
